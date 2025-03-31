@@ -1,0 +1,590 @@
+
+# install.packages("palmerpenguins")
+# library("palmerpenguins")
+# summary("palmerpenguins")
+View(penguins)
+#ggplot(data=penguins,aes(x=flipper_length_mm,y=body_mass_g))+geom_point(aes(color=species))
+
+
+
+ gds<-c(1,2,5,9,0,3,46,2)
+# crear un vector
+ gds[2]
+ gds[5]
+ typeof(gds)
+ length(gds)
+
+ asd<-list(1,2,3,"sdsdsd",TRUE)
+# crear una lista
+ str(asd)
+
+
+
+data("ToothGrowth")
+view(ToothGrowth)
+
+#opcion 1 multiple variables
+f_tg<-filter(ToothGrowth,dose==0.5)
+View(f_tg)
+arrange(f_tg,len)
+
+#opcion 2 nested
+arrange(filter(ToothGrowth,dose==0.5),len)
+
+#opcion 3 pipe operator
+filt_tg<- ToothGrowth %>%
+  filter(dose==0.5) %>%
+  arrange(len)
+
+#ejericio
+fig<- ToothGrowth %>% 
+  filter (dose==0.5) %>% 
+  group_by(supp) %>% 
+  summarize(mean_len=mean(len,na.rm=T),.group="drop")
+
+
+
+
+library(ggplot2)
+data("diamonds")
+View(diamonds)
+
+# first 6 rows
+head(diamonds)
+
+# high level infor
+str(diamonds)
+
+#name columns
+colnames(diamonds)
+
+library(tidyverse)
+
+#add a column to a dataframe
+mutate(diamonds, carat_2=carat*100)
+
+
+
+
+
+library(tidyverse)
+names <- c("abel", "beto", "carlos", "diana")
+age <- c(23,33 ,25 ,27 )
+people <- data.frame(names, age)
+head(people)
+str(people)
+glimpse(people)
+colnames(people)
+mutate(people, age_in_20 = age + 20)
+
+
+
+
+library(tidyverse)
+view(diamonds)
+as_tibble(diamonds)
+
+
+
+
+
+library(tidyverse)
+library(readr)
+#bookings_df <- read_csv(file.choose())
+gis_df <- read_csv("hotels.csv",locale = locale(encoding = "latin1"))
+ngis <- select(gis_df, `adr`, adults)
+#  sirve para seleccionar columnas específicas de un conjunto de datos, lo que permite trabajar solo con las columnas necesarias.
+mutate(new_df, total = `adr` / adults)
+
+
+
+
+
+
+
+pp=library(palmerpenguins)
+
+#summary of the data set
+skim_without_charts(penguins)
+
+#whats in the data set
+glimpse(penguins)
+
+head(penguins)
+
+#pipe ctrl shoft m 
+penguins %>% 
+  select(species)
+
+penguins %>% 
+  select(-species)
+
+penguins %>% 
+  rename(island_new=island)
+
+
+rename_with(penguins,toupper)
+
+rename_with(penguins,tolower)
+
+clean_names(penguins)
+
+
+
+
+#limpia la consola
+ctrl + l
+
+# limpia variables 
+rm(list = ls())
+
+
+
+
+
+
+
+
+
+
+library(tidyverse)
+
+#ordena de menor a mayor
+penguins %>% 
+  arrange(bill_length_mm)
+
+#ordena de mayor a menor
+penguins %>% 
+  arrange(-bill_length_mm)
+
+pgs<-penguins %>% arrange(-bill_length_mm)
+view(pgs)
+
+
+penguins %>% group_by(island) %>% drop_na() %>% summarize(mean_bill_length_mm=mean(bill_length_mm))
+
+penguins %>% group_by(island) %>% drop_na() %>% summarize(max_bill_length_mm=max(bill_length_mm))
+
+penguins %>% group_by(species,island) %>% drop_na() %>% summarize(max_bl=max(bill_length_mm),mean_bl=mean(bill_length_mm))
+
+penguins %>% filter(species=="Adelie") %>% drop_na()
+
+
+
+
+
+
+library(tidyverse)
+library(skimr)
+library(janitor)
+
+# procesar un archivo CSV que contiene caracteres no válidos o codificaciones incompatibles
+bookings_df <- read_csv("cleaning_data.csv", locale = locale(encoding = "ISO-8859-1"))
+
+glimpse(bookings_df)
+colnames(bookings_df)
+skim_without_charts(bookings_df)
+
+#te interesan principalmente las siguientes variables: 'hotel', 'is_canceled' y 'lead_time'
+trimmed_df <- bookings_df %>% 
+  select('hotel', 'is_canceled' , 'lead_time' )
+view(trimmed_df)
+
+# renombrar columnas
+trimmed_df %>% 
+  select(hotel, is_canceled, lead_time) %>% 
+  rename( hotel_tipo= hotel, cancelado=is_canceled, time_entrega=lead_time)
+
+# dividir o combinar datos en diferentes columnas
+example_df <- bookings_df %>%
+  select(arrival_date_year, arrival_date_month) %>% 
+  unite(arrival_month_year, c("arrival_date_month", "arrival_date_year"), sep = " ")
+head(example_df)
+
+
+glimpse(bookings_df)
+
+#
+example_def <- bookings_df %>%
+  mutate(guests = adultos+niños+bebés)
+head(example_def)
+
+
+
+example_daf <- bookings_df %>%
+  drop_na() %>% 
+  summarize(can=sum(is_canceled),pro= mean(lead_time))
+print(example_daf)
+
+
+
+
+
+id <- c(1:10)
+name <- c("John Mendes", "Rob Stewart", "Rachel Abrahamson", "Christy Hickman", "Johnson Harper", "Candace Miller", "Carlson Landy", "Pansy Jordan", "Darius Berry", "Claudia Garcia")
+job_title <- c("Professional", "Programmer", "Management", "Clerical", "Developer", "Programmer", "Management", "Clerical", "Developer", "Programmer")
+employee <- data.frame(id, name, job_title)
+
+
+
+
+library(tidyverse)
+id <- c(1:10)
+name <- c("John Mendes", "Rob Stewart", "Rachel Abrahamson", "Christy Hickman", "Johnson Harper", "Candace Miller", "Carlson Landy", "Pansy Jordan", "Darius Berry", "Claudia Garcia")
+job_title <- c("Professional", "Programmer", "Management", "Clerical", "Developer", "Programmer", "Management", "Clerical", "Developer", "Programmer")
+employee <- data.frame(id, name, job_title)
+
+employee
+employee2<-separate(employee,name, into=c("first_name","last_name"), sep=" ")
+#separate name and lastName
+
+unite(employee2,"name", first_name, last_name, sep=" ")
+#unite name and lastName
+
+
+library(palmerpenguins)
+view(penguins)
+pens<-penguins %>% 
+  mutate(body_mass_kg=body_mass_g/1000, flipper_length_m=flipper_length_mm/1000)
+#view(pens)
+
+
+
+
+
+
+library(palmerpenguins)
+view(penguins)
+pens<-penguins %>% 
+  arrange(bill_length_mm )
+
+
+
+
+
+
+install.packages('Tmisc')
+library(Tmisc)
+data(quartet)
+View(quartet)
+
+library(dplyr)
+quartet %>% 
+  group_by(set) %>% 
+  summarize(mean(x),sd(x),mean(y),sd(y),cor(x,y))
+library(ggplot2)
+ggplot(quartet,aes(x,y))+geom_point()+geom_smooth(method=lm,se=FALSE)+facet_wrap(~set)
+
+#install.packages('datasauRus')
+#library('datasauRus')
+#ggplot(datasaurus_dozen, aes(x=x,y=y,colour=dataset))+geom_point()+theme_void()+theme(legend.position="none")+facet_wrap(~dataset)
+
+
+
+install.packages('SimDesign')
+library(SimDesign)
+actual_temp<-c(68.3,70, 72.4, 71, 67, 70)
+predicted_temp<-c(67.9, 69, 71.5, 70, 67, 69)
+bias(actual_temp, predicted_temp)
+
+act_sales<-c(150,203,137,247,116,287)
+pred_sales<-c(200,300,150,250,150,300)
+bias(act_sales,pred_sales)
+
+
+
+library(ggplot2)
+library(palmerpenguins)
+data(penguins)
+View(penguins)
+
+#option1
+ggplot(data = penguins) +geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g))
+
+#option2
+ggplot(data = penguins, mapping = aes(x = flipper_length_mm, y = body_mass_g)) + geom_point()
+
+
+
+
+# AYUDA EN COMANDO
+?geom_point
+
+
+
+
+
+
+
+
+
+ 
+library(ggplot2)
+library(palmerpenguins)
+data(penguins)
+View(penguins)
+
+#agregar colores por especie
+ggplot(data = penguins) +geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g,color=species))
+
+# cmbiar forma de los marcadores por especie
+ggplot(data = penguins) +geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g, shape=species))
+
+#color, forma y tamaño
+ggplot(data = penguins) +geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g,color=species, shape=species, size=species))
+
+#alpha transparencia 
+ggplot(data = penguins) +geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g, alpha=species))
+
+#color
+ggplot(data = penguins) +geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g),color="purple")
+
+    
+
+
+
+
+
+
+library(ggplot2)
+library(palmerpenguins)
+data(penguins)
+View(penguins)
+
+
+# grafica smooth
+ggplot(data = penguins) +geom_smooth(mapping = aes(x = flipper_length_mm, y = body_mass_g))
+
+# agregar un geom extra
+ggplot(data = penguins) +geom_smooth(mapping = aes(x = flipper_length_mm, y = body_mass_g)) + geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g))
+
+# smooth para cada especie
+ggplot(data = penguins) +geom_smooth(mapping = aes(x = flipper_length_mm, y = body_mass_g, linetype = species))
+
+# usar geom_jitter (makes points easier to find)
+ggplot(data = penguins) +geom_jitter(mapping = aes(x = flipper_length_mm, y = body_mass_g))
+
+# bar graphic edge
+ggplot(data = diamonds) +geom_bar(mapping = aes(x = cut, color=cut))
+
+# bar graphic fill color
+ggplot(data = diamonds) +geom_bar(mapping = aes(x = cut, fill=cut))
+
+# bar graphic fill color
+ggplot(data = diamonds) +geom_bar(mapping = aes(x = cut, fill=clarity))
+
+
+
+
+
+# FACETAS
+
+library(ggplot2)
+library(palmerpenguins)
+data(penguins)
+View(penguins)
+
+# separete plots show the relationship between them, focus on imortants of our data
+ggplot(data = penguins,aes(x = flipper_length_mm, y = body_mass_g))+geom_point(aes(colour = species))+facet_wrap(~species)
+
+ggplot(data=diamonds)+geom_bar(mapping=aes(x=color, fill=cut))+facet_wrap(~cut)
+
+# filas genero, columna especie, graficas
+ggplot(data=penguins)+geom_point(mapping=aes(x=flipper_length_mm, y=body_mass_g, color=species))+facet_grid(sex~species)
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ejercicio
+# https://d3c33hcgiwev3.cloudfront.net/JQ3W1AY8Q0KN1tQGPONCXg_61f251fbb0a245e88f6fdeecad2cf2f1_Hands-On-Activity--Aesthetics-and-visualizations1_SPA.txt?Expires=1740182400&Signature=iADAvC9FpjTHe5CSjujLrHNBAPgQE6TdOZD27YT3lQbkcMr0kcH4DaY8LnH8Xl-gZeBbkC0HTTxq0srx8RPdPzF7opQYXxXRzem3RJl~mtqKK6hUi2WzGtJEtuW9hXx63LuVE59JZXYjdasYvetF6sIEzupMgRMQguGTGvHDFFY_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A
+# https://d3c33hcgiwev3.cloudfront.net/E0B8xodsSNmAfMaHbLjZ2g_cc33250306694348adb464cf85868cf1_Hands-On-Activity--Aesthetics-and-visualizations3_SPA.txt?Expires=1740182400&Signature=GrJIg-qWTbdd4k2kQD0YASNV4EPdRAT-uLIfYKrSQ8phudLy7yJ2xnYb5du5H1rP1OWkHDzh6-5tZafIQQLabnNotGEESoYay9YZhCcKkim7Cd0NZzueiZegAV1B0LSSl03JAVAuFAE4RlVd9AtJEY-2JbOwPpOY8YxsOjFgHeA_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A
+ht<-read.csv("Hotel_bookings.csv", fileEncoding = "Latin1")
+View(ht)
+head(ht)
+colnames(ht)
+library(ggplot2)
+
+#¿quÃ© tipo de distribuciÃ³n tiene el nÃºmero mÃ¡s alto de reservas?
+ggplot(data=ht)+geom_bar(mapping=aes(x=distribution_channel))
+
+#el nÃºmero de reservas para cada tipo de distribuciÃ³n es diferente dependiendo de si se realizÃ³ un depÃ³sito o de a quÃ© mercado representan
+ggplot(data=ht)+geom_bar(mapping=aes(x=distribution_channel,fill=market_segment))
+
+ggplot(data=ht)+geom_bar(mapping=aes(x=distribution_channel,fill=deposit_type))
+
+
+#te pide que crees grÃ¡ficos separados para cada tipo de depÃ³sito y segmento de mercado para ayudarlo a comprender las diferencias con mayor claridad
+
+ggplot(data=ht)+geom_bar(mapping=aes(x=distribution_channel))+facet_wrap(~deposit_type)
+
+ggplot(data=ht)+geom_bar(mapping=aes(x=distribution_channel))+facet_wrap(~market_segment)
+
+ggplot(data=ht)+geom_bar(mapping=aes(x=distribution_channel))+facet_wrap(~deposit_type~market_segment)
+
+
+
+
+
+
+
+
+
+# FILTROS
+
+ht<-read.csv("Hotel_bookings.csv", fileEncoding = "Latin1")
+View(ht)
+colnames(ht)
+library(ggplot2)
+
+ggplot(data = ht) + geom_bar(mapping = aes(x = hotel, fill = market_segment))
+
+# el eje y ('count' como opcion predeterminada)
+#'fill' a la variable 'market_segment' para generar secciones con cÃ³digos de color dentro de cada barra.  
+
+#es difÃ­cil comparar el tamaÃ±o de los segmentos de mercado en la parte superior de las barras. Lo que buscas es que tu interesada pueda comparar con claridad cada segmento
+
+#Decides usar la funciÃ³n facet_wrap() para crear un grÃ¡fico diferente para cada segmento del mercado.
+ggplot(data = ht) + geom_bar(mapping = aes(x = hotel))+facet_wrap(~market_segment) 
+
+library(tidyverse)
+# Usa la funciÃ³n `filter()` para crear un conjunto de datos que solo incluya los datos que quieres: 
+#
+onlineta_city_hotels <- filter(ht, (hotel=="City Hotel" & ht$market_segment=="Online TA"))
+
+#Puedes usar el operador de canalizaciÃ³n (%>%) para hacerlo en pasos! 
+onlineta_city_hotels_v2 <- ht %>%
+  filter(hotel=="City Hotel") %>%
+  filter(market_segment=="Online TA")
+
+
+
+#ggplot(data = onlineta_city_hotels) + geom_point(mapping = aes(x = lead_time, y = ni.os))
+
+#ggplot(data = ht) +  geom_point(mapping = aes(x = lead_time, y = ni.os))
+
+
+
+
+
+
+
+
+# LABEL & ANNOTATE
+
+library("ggplot2")
+library("palmerpenguins")
+
+pl<-ggplot(data=penguins)+geom_point(mapping=aes(x=flipper_length_mm, y=body_mass_g, color=species)) + 
+labs(title="pinguinos", subtitle="tonight", caption = "Dr. Kristen Gorman") + 
+annotate("text", x=220,y=3500, label="gentoos",color="purple", fontface="bold",size=5, angle=45)
+
+
+#save last plot
+ggsave("penguins.png")
+
+
+
+
+
+
+
+
+library(palmerpenguins)
+View(penguins)
+ggplot(data=penguins)+geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g, color=species))
+
+
+
+
+
+
+
+
+---
+title: "pruebas"
+author: "Carlso"
+date: "2025-03-07"
+output: html_document
+---
+
+Buen día dobble espaci-salto   
+*Italica*  
+**Negrita**  
+
+# Titulo
+## subtitulo
+### consecutivamente
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer varius nulla sed justo tincidunt, at facilisis lectus dictum. Code et algorithmus sunt fundamenta moderni mundi digitalis. Nullam efficitur, sapien ac varius fermentum, justo lorem bibendum nisl, at malesuada ex magna nec sem. Syntax error? Non, sed vitae semper felis, ut cursus eros. Compilers et interpretes operantur in harmony ut efficaciter traducant instructiones humanas in linguam machinae. Sed ut perspiciatis unde omnis error debugging natus est. `los chocorroles (se ven grises y fierentes)`
+<http://www.google.com>  
+Lenguajes:
+
+* Matlab
+* Python
+* R  
+
+Mas informacion aqui [link](http://wikipedia.com)
+
+![Plot this way](https://cdn.pixabay.com/photo/2016/03/18/15/02/ufo-1265186_1280.jpg)
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+colnames(penguins)
+```
+
+
+
+
+
+
+# Examen modulo 7
+library(dplyr)
+
+choc<-read.csv("flavors_of_cacao.csv")
+colnames(choc)
+choc %>% 
+  rename(Brand= Company...Maker.if.known.)
+colnames(choc)
+choco<-rename(choc,Brand= Company...Maker.if.known.)
+colnames(choco)
+
+cho<-choco %>% 
+  select(Rating, Cocoa.Percent, Company.Location) 
+colnames(cho)
+head(cho)
+
+cho<-choco %>% 
+  select(Rating, Cocoa.Percent, Company.Location) %>% 
+  summarize(chomean=mean(Rating))
+View(cho)
+
+cho<-choco %>% 
+  select(Rating, Cocoa.Percent, Company.Location) 
+colnames(cho)
+View(cho)
+calif<-cho %>% 
+  filter(Rating>=3.75, Cocoa.Percent>80)
+View(calif)
+
+colnames(calif)
+library(dplyr)
+library(tidyverse)
+ggplot(data=calif)+geom_bar(mapping = aes(x=Company.Location, color=Company.Location))
+
+
+
+
+
+
+?read.csv
+help(read.csv)
